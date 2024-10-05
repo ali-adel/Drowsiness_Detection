@@ -18,6 +18,7 @@
             <a href="#services">Services</a>
             <a href="#about">About</a>
             <a href="#detection">Detection</a>
+            <a href="#video-prediction">Video Prediction</a> <!-- Added link to video prediction section -->
         </nav>
     </div>
     
@@ -79,101 +80,77 @@
             </div>
             <input id="imageInput" type="file" name="file" accept="image/*" required>
         </label>
-    
-        <!-- Replace this button with the new button -->
-        <button class="btn">
+        <input type="file" id="imageInput" style="display: none;">
+        
+
+
+        <button class="btn" id="predictButton">
             <svg height="24" width="24" fill="#FFFFFF" viewBox="0 0 24 24" data-name="Layer 1" id="Layer_1" class="sparkle">
                 <path d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"></path>
             </svg>
             <span class="text">Detect Drowsiness</span>
         </button>
-        
-        <div class="spinner" id="loadingSpinner" style="display:none;"></div>
-        <img id="predicted-image" src="" alt="Predicted Result" style="display: none;">
+        <div id="result">
+            <!-- Result of the prediction will be displayed here -->
+        </div>
     </section>
-    
+
+    <section id="video-prediction" class="form-section">
+        <h2>Live Video Prediction</h2>
+        <p>See the real-time predictions below:</p>
+        <div id="video-stream">
+            <img id="video-output" alt="Live Video Output"> <!-- Placeholder for video frames -->
+        </div>
+    </section>
+
     <script>
-// For Image Upload
-document.querySelector('.btn').addEventListener('click', async (event) => {
-    event.preventDefault();
-    
-    const inputFile = document.getElementById('imageInput');
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    const predictedImage = document.getElementById('predicted-image');
-    
-    if (inputFile.files.length === 0) {
-        alert('Please upload an image.');
-        return;
-    }
-    
-    const formData = new FormData();
-    formData.append('file', inputFile.files[0]);
-    
-    loadingSpinner.style.display = 'block';
-    
-    try {
-        const response = await fetch('/predict/yolo/', {  // Ensure this matches the FastAPI endpoint
-            method: 'POST',
-            body: formData
-        });
+        document.getElementById("predictButton").onclick = async () => {
+            const fileInput = document.getElementById("imageInput");
+            const file = fileInput.files[0];
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok.');
-        }
+            if (!file) {
+                alert("Please select an image before making a prediction.");
+                return;
+            }
 
-        const data = await response.json();
-        
-        loadingSpinner.style.display = 'none';
-        
-        predictedImage.src = data.image_url;
-        predictedImage.style.display = 'block';
+            const formData = new FormData();
+            formData.append("file", file);
 
-        console.log(data.predictions);
-    } catch (error) {
-        loadingSpinner.style.display = 'none';
-        console.error('There was a problem with your fetch operation:', error);
-        alert('An error occurred while processing the image. Please try again.');
-    }
-});
+            const response = await fetch("/predict/yolo/", {
+                method: "POST",
+                body: formData
+            });
 
-// For Video Upload (if you have a separate button for video)
-document.querySelector('.video-btn').addEventListener('click', async (event) => {
-    event.preventDefault();
+            const result = await response.json();
+            const resultDiv = document.getElementById("result");
 
-    const videoFile = document.getElementById('videoInput');
-    const loadingSpinner = document.getElementById('loadingSpinner');
+            if (result.error) {
+                resultDiv.textContent = `Error: ${result.error}`;
+            } else {
+                const imgElement = document.createElement("img");
+                imgElement.src = result.image_url;
+                resultDiv.innerHTML = ""; // Clear previous result
+                resultDiv.appendChild(imgElement);
+            }
+        };
 
-    if (videoFile.files.length === 0) {
-        alert('Please upload a video.');
-        return;
-    }
+        // WebSocket logic for video stream
+        const videoOutput = document.getElementById("video-output");
+        const ws = new WebSocket(`ws://${window.location.host}/ws/video`);
 
-    const formData = new FormData();
-    formData.append('file', videoFile.files[0]);
+        ws.onmessage = function(event) {
+            const blob = new Blob([event.data], { type: 'image/jpeg' });
+            const url = URL.createObjectURL(blob);
+            videoOutput.src = url;
+        };
 
-    loadingSpinner.style.display = 'block';
+        ws.onerror = function(error) {
+            console.error("WebSocket error:", error);
+        };
 
-    try {
-        const response = await fetch('/predict/yolo/video/', {  // Ensure this matches the FastAPI endpoint
-            method: 'POST',
-            body: formData
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok.');
-        }
-
-        const data = await response.json();
-
-        loadingSpinner.style.display = 'none';
-
-        alert('Video processed! You can view it here: ' + data.video_url);
-    } catch (error) {
-        loadingSpinner.style.display = 'none';
-        console.error('There was a problem with your fetch operation:', error);
-        alert('An error occurred while processing the video. Please try again.');
-    }
-});
+        ws.onclose = function() {
+            console.log("WebSocket connection closed");
+        };
     </script>
 </body>
 </html>
