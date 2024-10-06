@@ -95,11 +95,13 @@ section {
     height: 213px;
 }
 
+
 h2 {
     margin-top: -197px;
     font-size: 36px;
     margin-bottom: 69px;
     color: white;
+    margin-top: -108px;
 }
 
 /* Services section styles */
@@ -131,18 +133,16 @@ h2 {
 }
 
 /* Form section styles */
-.form-section {
-    padding: 255px 70px 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    height: 117vh;
-    margin: 0;
-    overflow: auto;
-    /* row-gap: 12px; */
-}
-
+    .form-section {
+        padding: 14px 141px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 128vh;
+        margin: 3px;
+        overflow: auto;
+    }
 
 
 /* Input styles */
@@ -188,11 +188,11 @@ input[type="file"] {
 /* Video background styling */
 #background-video {
     position: fixed;
-    top: 70px;
-    left: 0;
-    width: 100%;
+    top: 67px;
+    left: -4px;
+    width: 102%;
     height: 100%;
-    object-fit: cover;
+    object-fit: inherit;
     z-index: -1;
     filter: brightness(45%);
 }
@@ -211,19 +211,7 @@ input[type="file"] {
     z-index: 1;
 }
 
-#welcome h2 {
-    font-size: 36px;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
 
-#welcome p {
-    font-size: 25px;
-    line-height: 1.6;
-    max-width: 500px;
-    margin: 0 auto;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
 
 /* Responsive styles */
 @media (max-width: 768px) {
@@ -346,7 +334,7 @@ input[type="file"] {
     justify-content: center;
     align-items: center;
     gap: 8px;
-    background: #1C1A1C;
+    background: #797979d6;
     cursor: pointer;
     transition: all 450ms ease-in-out;
     margin: 25px;
@@ -380,3 +368,17 @@ input[type="file"] {
     fill: white;
     transform: scale(1.2);
   } 
+
+  /* Optional: Style for the result container */
+#result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+p {
+    margin-top: 18px;
+    margin-bottom: 17px;
+}
+

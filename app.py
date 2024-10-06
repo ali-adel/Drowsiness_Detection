@@ -12,6 +12,8 @@ from ultralytics import YOLO
 import torch
 import cv2  # Import OpenCV for video processing
 import asyncio
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+import base64
 
 # Load YOLO model (TensorRT)
 model_path = r'C:\Users\Legion\Desktop\drowsiness_detection_deployment\models\yolo_final.engine'
@@ -26,26 +28,29 @@ app.mount("/static", StaticFiles(directory="C:/Users/Legion/Desktop/drowsiness_d
 
 # Serve static files from the "logo" directory
 app.mount("/image", StaticFiles(directory="C:/Users/Legion/Desktop/drowsiness_detection_deployment/images"), name="logo")
+#app.mount("/predicted_frames_stream", StaticFiles(directory="predicted_frames_stream"), name="predicted_frames_stream")
 
-# Define video path for testing
-video_path = Path(r"C:\Users\Legion\Desktop\drowsiness_detection_deployment\Ali_test.mp4")  # Replace with your test video path
+
+
+@app.get("/video")
+async def get_video():
+    video_path = os.path.join(r"C:\Users\Legion\Desktop\drowsiness_detection_deployment\videos\yolo_omar_morning_web.mp4")  # Update with your video path
+    return FileResponse(video_path)
+
 
 # Set up Jinja2 templates directory
 templates = Jinja2Templates(directory="templates")
 
 # Create directories to store predicted images and videos
 os.makedirs("predicted_images", exist_ok=True)
-os.makedirs("predicted_videos", exist_ok=True)
+#os.makedirs("predicted_frames_stream", exist_ok=True)
 
 # Serve static files from the "predicted_images" directory
 @app.get("/predicted_images/{filename}", response_class=FileResponse)
 async def get_image(filename: str):
     return FileResponse(f"predicted_images/{filename}")
 
-# Serve static files from the "predicted_videos" directory
-@app.get("/predicted_videos/{filename}", response_class=FileResponse)
-async def get_video(filename: str):
-    return FileResponse(f"predicted_videos/{filename}")
+
 
 # Homepage with form
 @app.get("/", response_class=HTMLResponse)
@@ -53,48 +58,36 @@ async def get_form(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "predicted_image": None})
 
 # WebSocket endpoint for video prediction
-# WebSocket endpoint for video prediction
-# WebSocket endpoint for video prediction
 @app.websocket("/ws/video")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    cap = cv2.VideoCapture(str(video_path))
-
-    if not cap.isOpened():
-        await websocket.close()
-        print("Error: Video file could not be opened.")
-        return
-
+    
     try:
         while True:
-            success, frame = cap.read()
-            if not success:
-                print("End of video stream.")
-                break
-
-            # Make predictions on the frame
-            results = model_yolo(frame)
-            annotated_frame = results[0].plot()  # Annotate the frame
-
-            # Encode the frame as JPEG
-            _, buffer = cv2.imencode('.jpg', annotated_frame)
-            frame_bytes = buffer.tobytes()
-
-            # Send the frame over the WebSocket
-            await websocket.send_bytes(frame_bytes)
-
-            # Optional: Add a slight delay to prevent overwhelming the client
-            await asyncio.sleep(0.000001)  # Adjust delay as needed for performance
-
+            # Receive binary data from the client instead of base64 text
+            data = await websocket.receive_bytes()  # Receive binary image data
+            
+            # Convert bytes to NumPy array using OpenCV (faster than PIL)
+            nparr = np.frombuffer(data, np.uint8)
+            image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)  # Decode the image
+            
+            # Get the prediction from the YOLO model
+            results = model_yolo(image_np)
+            
+            # Convert the YOLO result back to image format
+            annotated_image = results[0].plot()  # This method should return the annotated image as a NumPy array
+            
+            # Encode image back to JPEG format
+            _, encoded_image = cv2.imencode('.jpg', annotated_image)
+            
+            # Send the binary image (encoded) back to the client
+            await websocket.send_bytes(encoded_image.tobytes())
+    
+    except WebSocketDisconnect:
+        print("Client disconnected")
     except Exception as e:
-        print(f"Error during video processing: {e}")
-    finally:
-        cap.release()
-        try:
-            # Attempt to close the WebSocket gracefully
-            await websocket.close()
-        except RuntimeError:
-            print("WebSocket already closed.")
+        await websocket.send_text(f"Error: {str(e)}")
+
 
 
 

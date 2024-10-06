@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drowsiness Detection</title>
     <link rel="stylesheet" href="/static/style.css"> <!-- Link to external CSS -->
+    <style>
+        #result img {
+        max-width: 50%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 1px 1px 8px rgba(219, 202, 13, 0.735);
+        }
+        #welcome h3 {
+        font-size: 36px;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 255, 60, 0.7);
+            }
+    </style>
 </head>
 <body>
     <div class="header">
@@ -17,14 +30,14 @@
             <a href="#home">Home</a>
             <a href="#services">Services</a>
             <a href="#about">About</a>
-            <a href="#detection">Detection</a>
-            <a href="#video-prediction">Video Prediction</a> <!-- Added link to video prediction section -->
+            <a href="#detection">Image Prediction</a>
+            <a href="#video-detection">Video Prediction</a> <!-- Added link to video prediction section -->
         </nav>
     </div>
     
     <section id="home" class="welcome">
         <!-- Video Background -->
-        <video id="background-video" autoplay loop muted playsinline>
+       <video id="background-video" autoplay loop muted playsinline>
             <source src="http://127.0.0.1:8000/video" type="video/mp4" />
         </video>
 
@@ -32,9 +45,9 @@
             <span>Welcome to H O R</span><br>
             <span>Our Drowsiness Detection System</span>
         </h2>
-        <p>
+        <h3 style="padding: ;">
             Our advanced Drowsiness Detection System employs cutting-edge technology to monitor driver alertness and reduce the risk of accidents caused by fatigue. Utilizing real-time facial recognition and behavioral analysis, our system detects signs of drowsiness and alerts drivers through audio and visual warnings. By integrating seamlessly with vehicles, we aim to enhance road safety and provide a reliable solution for preventing fatigue-related incidents. Trust H O R to keep you and your loved ones safe on the road.
-        </p>
+        </h3>
     </section>
     
     <section id="services">
@@ -82,8 +95,6 @@
         </label>
         <input type="file" id="imageInput" style="display: none;">
         
-
-
         <button class="btn" id="predictButton">
             <svg height="24" width="24" fill="#FFFFFF" viewBox="0 0 24 24" data-name="Layer 1" id="Layer_1" class="sparkle">
                 <path d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"></path>
@@ -95,13 +106,33 @@
         </div>
     </section>
 
-    <section id="video-prediction" class="form-section">
-        <h2>Live Video Prediction</h2>
-        <p>See the real-time predictions below:</p>
-        <div id="video-stream">
-            <img id="video-output" alt="Live Video Output"> <!-- Placeholder for video frames -->
-        </div>
+
+    <section id="video-detection" class="form-section">
+        <h2> Drowsiness Detection Video Upload </h2>
+        <p>Upload a Video for drowsiness detection:</p>
+        <form id="videoForm" class="form-section">
+            <label for="videoInput" class="custum-file-upload">
+                <div class="icon">
+                    <svg viewBox="0 0 24 24" fill="" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z"></path>
+                    </svg>
+                </div>
+                <div class="text">
+                    <span>Click to upload video</span>
+                </div>
+                <input id="videoInput" type="file" name="file" accept="video/*" required>
+            </label>
+    
+            <button class="btn" id="predictButton" type="submit">
+                <svg height="24" width="24" fill="#FFFFFF" viewBox="0 0 24 24" data-name="Layer 1" id="Layer_1" class="sparkle">
+                    <path d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"></path>
+                </svg>
+                <span class="text">Detect Drowsiness</span>
+            </button>
+        </form>
+        <div id="vid_result"></div>
     </section>
+
 
     <script>
         document.getElementById("predictButton").onclick = async () => {
@@ -134,23 +165,79 @@
             }
         };
 
-        // WebSocket logic for video stream
-        const videoOutput = document.getElementById("video-output");
-        const ws = new WebSocket(`ws://${window.location.host}/ws/video`);
 
-        ws.onmessage = function(event) {
-            const blob = new Blob([event.data], { type: 'image/jpeg' });
-            const url = URL.createObjectURL(blob);
-            videoOutput.src = url;
+// WebSocket connection setup
+const ws = new WebSocket('ws://localhost:8000/ws/video'); // Adjust URL as needed
+
+// Event handler for WebSocket connection
+ws.onopen = () => {
+    console.log('WebSocket connection established');
+};
+
+// Event handler for receiving messages (binary frames) from the server
+ws.onmessage = (event) => {
+    const predictedBlob = event.data; // The binary image data received from the server
+
+    // Check if the image element exists to update the image source
+    let imgElement = document.getElementById('predictedImage');
+    if (!imgElement) {
+        // Create an image element if it doesn't exist
+        imgElement = document.createElement('img');
+        imgElement.id = 'predictedImage';
+        imgElement.width = 740; // Set a fixed width for the displayed image
+        imgElement.height = 480; // Set a fixed height for the displayed image
+        document.getElementById('vid_result').appendChild(imgElement); // Append the image to the vid_result div
+    }
+
+    // Create an object URL for the binary data (Blob) and update the image source
+    const url = URL.createObjectURL(predictedBlob);
+    imgElement.src = url;
+};
+
+// Event listener for form submission (video input)
+document.getElementById('videoForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const videoInput = document.getElementById('videoInput');
+    const file = videoInput.files[0];
+
+    if (file) {
+        const videoURL = URL.createObjectURL(file);
+        const videoElement = document.createElement('video');
+        videoElement.src = videoURL;
+        videoElement.play();
+
+        // Create a canvas element to capture frames from the video
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+
+        // Update the canvas size to match the video once metadata is loaded
+        videoElement.onloadedmetadata = () => {
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
         };
 
-        ws.onerror = function(error) {
-            console.error("WebSocket error:", error);
-        };
+        // Capture frames at regular intervals and send them as binary (Blob)
+        const intervalId = setInterval(() => {
+            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height); // Draw the current frame onto the canvas
 
-        ws.onclose = function() {
-            console.log("WebSocket connection closed");
+            // Convert the canvas content to Blob (JPEG format)
+            canvas.toBlob(blob => {
+                if (blob) {
+                    ws.send(blob); // Send the Blob through WebSocket
+                }
+            }, 'image/jpeg');
+        }, 100); // Adjust the interval (100ms here for 10 FPS)
+
+        // Stop capturing frames when the video ends
+        videoElement.onended = () => {
+            clearInterval(intervalId); // Stop the interval loop
+            ws.close(); // Close the WebSocket connection when done
+            canvas.remove(); // Clean up the canvas element
         };
+    }
+});
+
     </script>
 </body>
 </html>
