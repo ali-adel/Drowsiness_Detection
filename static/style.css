@@ -1,6 +1,6 @@
 :root {
     --background-color: #000; /* Black background */
-    --text-color: #FFD700; /* Gold text */
+    --text-color: #ffffff; /* Gold text */
     --header-bg-color: #111; /* Header background */
     --section-bg-color: rgba(34, 34, 34, 0.8); /* Section background */
     --card-bg-color: #444; /* Service card background */
@@ -41,7 +41,7 @@ body {
 }
 
 h1 {
-    margin: 0 10px;
+    margin: 19px 10px;
     font-size: 24px;
     color: #FFF;
 }
@@ -121,6 +121,12 @@ h2 {
     text-align: center;
     transition: transform 0.4s;
 }
+.service-card p {
+    max-width: 100%;
+    height: auto;
+    font-size: 15px;
+}
+
 
 .service-card img {
     max-width: 100%;
@@ -276,54 +282,82 @@ input[type="file"] {
 
 /* Spinner styles from Uiverse.io */
 /* From Uiverse.io by AqFox */ 
-.spinner {
-    border: 8px solid rgba(255, 215, 0, 0.3); /* Light gold border */
-    border-top: 8px solid #FFD700; /* Gold color for the top */
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-}
-   
-.spinner div {
-    width: 100%;
+.loader {
+    position: relative;
+    font-size: 16px;
+    width: 5.5em;
+    height: 5.5em;
+    margin-top: 30px;
+  }
+  
+  .loader:before {
+    content: '';
+    position: absolute;
+    transform: translate(-50%, -50%) rotate(45deg);
     height: 100%;
-    background-color: #004dff;
-    border-radius: 50%;
-    animation: spinner-4t3wzl 1.25s infinite backwards;
-}
-   
-.spinner div:nth-child(1) {
-    animation-delay: 0.15s;
-    background-color: rgba(0,77,255,0.9);
-}
-   
-.spinner div:nth-child(2) {
-    animation-delay: 0.3s;
-    background-color: rgba(0,77,255,0.8);
-}
-   
-.spinner div:nth-child(3) {
-    animation-delay: 0.45s;
-    background-color: rgba(0,77,255,0.7);
-}
-   
-.spinner div:nth-child(4) {
-    animation-delay: 0.6s;
-    background-color: rgba(0,77,255,0.6);
-}
-   
-.spinner div:nth-child(5) {
-    animation-delay: 0.75s;
-    background-color: rgba(0,77,255,0.5);
-}
-   
-
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+    width: 4px;
+    background: #fff;
+    left: 50%;
+    top: 50%;
+  }
+  
+  .loader:after {
+    content: '';
+    position: absolute;
+    left: 0.2em;
+    bottom: 0.18em;
+    width: 1em;
+    height: 1em;
+    background-color: orange;
+    border-radius: 15%;
+    animation: rollingRock 2.5s cubic-bezier(.79, 0, .47, .97) infinite;
+  }
+  
+  @keyframes rollingRock {
+    0% {
+      transform: translate(0, -1em) rotate(-45deg)
+    }
+  
+    5% {
+      transform: translate(0, -1em) rotate(-50deg)
+    }
+  
+    20% {
+      transform: translate(1em, -2em) rotate(47deg)
+    }
+  
+    25% {
+      transform: translate(1em, -2em) rotate(45deg)
+    }
+  
+    30% {
+      transform: translate(1em, -2em) rotate(40deg)
+    }
+  
+    45% {
+      transform: translate(2em, -3em) rotate(137deg)
+    }
+  
+    50% {
+      transform: translate(2em, -3em) rotate(135deg)
+    }
+  
+    55% {
+      transform: translate(2em, -3em) rotate(130deg)
+    }
+  
+    70% {
+      transform: translate(3em, -4em) rotate(217deg)
+    }
+  
+    75% {
+      transform: translate(3em, -4em) rotate(220deg)
+    }
+  
+    100% {
+      transform: translate(0, -1em) rotate(-225deg)
+    }
+  }
 
 .btn {
     border: none;
@@ -379,6 +413,7 @@ input[type="file"] {
 
 p {
     margin-top: 18px;
-    margin-bottom: 17px;
+    margin-bottom: 39px;
+    font-size: 26px;
 }
 

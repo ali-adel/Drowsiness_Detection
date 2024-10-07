@@ -16,7 +16,10 @@
         font-size: 36px;
         margin-bottom: 20px;
         text-shadow: 2px 2px 4px rgba(0, 255, 60, 0.7);
-            }
+        }
+        h3{
+        --text-color: orange;
+        }
     </style>
 </head>
 <body>
@@ -31,7 +34,8 @@
             <a href="#services">Services</a>
             <a href="#about">About</a>
             <a href="#detection">Image Prediction</a>
-            <a href="#video-detection">Video Prediction</a> <!-- Added link to video prediction section -->
+            <a href="#video-detection">Video Prediction</a> 
+            <a href="#stream-detection">Streaming</a><!-- Added link to video prediction section -->
         </nav>
     </div>
     
@@ -60,7 +64,7 @@
             </div>
             <div class="service-card">
                 <img src="/image/img3.jpeg" alt="Night Detection">
-                <h3>Night Detection</h3>
+                <h3 >Night Detection</h3>
                 <p>Stay safe during nighttime driving with our cutting-edge detection solutions tailored for low-light conditions.</p>
             </div>
             <div class="service-card">
@@ -95,13 +99,14 @@
         </label>
         <input type="file" id="imageInput" style="display: none;">
         
-        <button class="btn" id="predictButton">
+        <button class="btn" id="imagetButton">
             <svg height="24" width="24" fill="#FFFFFF" viewBox="0 0 24 24" data-name="Layer 1" id="Layer_1" class="sparkle">
                 <path d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"></path>
             </svg>
             <span class="text">Detect Drowsiness</span>
         </button>
         <div id="result">
+            
             <!-- Result of the prediction will be displayed here -->
         </div>
     </section>
@@ -123,7 +128,7 @@
                 <input id="videoInput" type="file" name="file" accept="video/*" required>
             </label>
     
-            <button class="btn" id="predictButton" type="submit">
+            <button class="btn" id="videoButton" type="submit">
                 <svg height="24" width="24" fill="#FFFFFF" viewBox="0 0 24 24" data-name="Layer 1" id="Layer_1" class="sparkle">
                     <path d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"></path>
                 </svg>
@@ -133,9 +138,90 @@
         <div id="vid_result"></div>
     </section>
 
+<!------------------------------------ Streaming ----------------------------------------------->
+
+<section id="stream-detection" class="form-section">
+    <h1>Camera Stream</h1>
+
+    
+   <img id="stream" width="640" height="480"  style="box-shadow: 1px 1px 8px rgba(219, 202, 13, 0.735);"/>
+            <!--loadingSpinner-->
+    <div class="loader" style="display: none;"></div>
+    <div id="connectionMessage" style="display: none; color:orange; text-align: center;">
+        Establishing connection...
+    </div>
+
+    <button class="btn" id="streamButton">
+        <svg height="24" width="24" fill="#FFFFFF" viewBox="0 0 24 24" data-name="Layer 1" id="Layer_1" class="sparkle">
+            <path d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"></path>
+        </svg>
+        <span class="text">Start Stream</span>
+    </button>
+
+</section>
+
 
     <script>
-        document.getElementById("predictButton").onclick = async () => {
+const video = document.getElementById("stream");
+const videoButton = document.getElementById("streamButton");
+const loadingSpinner = document.querySelector(".loader"); // Adjust to select the loader class
+const connectionMessage = document.getElementById("connectionMessage"); // Get the connection message element
+let stream; // Video stream WebSocket variable
+let isStreaming = false; // Streaming state
+
+videoButton.onclick = function() {
+    if (!isStreaming) {
+        startStream();
+    } else {
+        stopStream();
+    }
+};
+
+function startStream() {
+    loadingSpinner.style.display = "block"; // Show the loading spinner
+    connectionMessage.style.display = "block"; // Show the connection message
+
+    // Start video WebSocket
+    stream = new WebSocket("ws://localhost:8000/ws/stream");
+
+    stream.onopen = function() {
+        loadingSpinner.style.display = "none"; // Hide spinner when the stream opens
+        connectionMessage.style.display = "none"; // Hide connection message
+        isStreaming = true; // Update streaming state
+        videoButton.querySelector('.text').textContent = "Stop Stream"; // Update button text
+    };
+
+    stream.onmessage = function(event) {
+        const blob = new Blob([event.data], { type: 'image/jpeg' });
+        const url = URL.createObjectURL(blob);
+        video.src = url; // Set image source
+        video.onload = function() {
+            URL.revokeObjectURL(url); // Release memory
+        };
+    };
+
+    stream.onerror = function(error) {
+        console.error("WebSocket error:", error);
+        loadingSpinner.style.display = "none"; // Hide spinner on error
+        connectionMessage.style.display = "none"; // Hide connection message on error
+    };
+
+    stream.onclose = function() {
+        console.log("WebSocket connection closed");
+        isStreaming = false;
+        videoButton.querySelector('.text').textContent = "Start Stream"; // Update button text
+        loadingSpinner.style.display = "none"; // Hide spinner when the stream closes
+        connectionMessage.style.display = "none"; // Hide connection message when the stream closes
+    };
+}
+
+function stopStream() {
+    if (stream) {
+        stream.close(); // Close video WebSocket connection
+    }
+}
+/////////////////////////////////////////////////////////////////////////
+        document.getElementById("imagetButton").onclick = async () => {
             const fileInput = document.getElementById("imageInput");
             const file = fileInput.files[0];
 
@@ -236,7 +322,9 @@ document.getElementById('videoForm').addEventListener('submit', function (e) {
             canvas.remove(); // Clean up the canvas element
         };
     }
+
 });
+
 
     </script>
 </body>

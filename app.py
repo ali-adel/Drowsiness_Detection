@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, Request, WebSocket
+from fastapi import FastAPI, File, UploadFile, Request, WebSocket ,WebSocketDisconnect
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -125,6 +125,75 @@ async def predict_yolo(file: UploadFile = File(...)):
     
     except Exception as e:
         return {"error": str(e)}
+    
+################# Streaming 
+
+@app.websocket("/ws/video")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    
+    try:
+        while True:
+            # Receive binary data from the client instead of base64 text
+            data = await websocket.receive_bytes()  # Receive binary image data
+            
+            # Convert bytes to NumPy array using OpenCV (faster than PIL)
+            nparr = np.frombuffer(data, np.uint8)
+            image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)  # Decode the image
+            
+            # Get the prediction from the YOLO model
+            results = model_yolo(image_np)
+            
+            # Convert the YOLO result back to image format
+            annotated_image = results[0].plot()  # This method should return the annotated image as a NumPy array
+            
+            # Encode image back to JPEG format
+            _, encoded_image = cv2.imencode('.jpg', annotated_image)
+            
+            # Send the binary image (encoded) back to the client
+            await websocket.send_bytes(encoded_image.tobytes())
+    
+    except WebSocketDisconnect:
+        print("Client disconnected")
+    except Exception as e:
+        await websocket.send_text(f"Error: {str(e)}")
+
+
+@app.websocket("/ws/stream")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    cap = cv2.VideoCapture(0)  # Open the default camera
+
+    if not cap.isOpened():
+        await websocket.close()
+        return
+
+    try:
+        while True:
+            # Read a frame from the camera
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            # Run the YOLO model on the frame
+            results = model_yolo(frame)
+            annotated_frame = results[0].plot()  # Annotated frame
+
+            # Encode the annotated frame to JPEG format
+            _, buffer = cv2.imencode('.jpg', annotated_frame)
+            frame_bytes = buffer.tobytes()
+
+            # Send the frame bytes to the WebSocket
+            await websocket.send_bytes(frame_bytes)
+
+    except WebSocketDisconnect:
+        print("Client disconnected")
+    except Exception as e:
+        print(f"Error: {str(e)}")
+    finally:
+        cap.release()  # Release the camera resource
+        print("Camera released")
+
 
 # Run the FastAPI application
 if __name__ == "__main__":
