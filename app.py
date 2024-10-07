@@ -7,13 +7,11 @@ import numpy as np
 import io
 import os
 import time
-from pathlib import Path
 from ultralytics import YOLO
 import torch
-import cv2  # Import OpenCV for video processing
-import asyncio
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-import base64
+import cv2  
+
+
 
 # Load YOLO model (TensorRT)
 model_path = r'C:\Users\Legion\Desktop\drowsiness_detection_deployment\models\yolo_final.engine'
