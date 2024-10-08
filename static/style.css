@@ -139,16 +139,16 @@ h2 {
 }
 
 /* Form section styles */
-    .form-section {
-        padding: 14px 141px 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        height: 128vh;
-        margin: 3px;
-        overflow: auto;
-    }
+.form-section {
+    padding: 47px 94px 65px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 154vh;
+    margin: 0;
+    overflow: auto;
+}
 
 
 /* Input styles */
@@ -194,7 +194,7 @@ input[type="file"] {
 /* Video background styling */
 #background-video {
     position: fixed;
-    top: 67px;
+    top: 107px;
     left: -4px;
     width: 102%;
     height: 100%;
@@ -417,3 +417,13 @@ p {
     font-size: 26px;
 }
 
+#warning {
+    margin-top: 10px; /* Add some space above the warning text */
+    color: red; /* Set the warning text color */
+    font-weight: bold; /* Make the text bold */
+}
+
+#vid_result {
+    margin: 26px;
+    text-align: center; /* Center align the text */
+}

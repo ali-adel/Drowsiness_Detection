@@ -12,14 +12,7 @@
         border-radius: 10px;
         box-shadow: 1px 1px 8px rgba(219, 202, 13, 0.735);
         }
-        #welcome h3 {
-        font-size: 36px;
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 4px rgba(0, 255, 60, 0.7);
-        }
-        h3{
-        --text-color: orange;
-        }
+
     </style>
 </head>
 <body>
@@ -135,9 +128,17 @@
                 <span class="text">Detect Drowsiness</span>
             </button>
         </form>
-        <div id="vid_result"></div>
+
+        <audio id="warningSound" src="/static/warning.mp3" preload="auto"></audio> 
+
+        <div id="vid_result" style="position: relative;">
+            
+            <div id="warning" style="display: none;">WARNING: Drowsiness Detected!</div>    
+        </div>
+       
     </section>
 
+   
 <!------------------------------------ Streaming ----------------------------------------------->
 
 <section id="stream-detection" class="form-section">
@@ -261,24 +262,101 @@ ws.onopen = () => {
 };
 
 // Event handler for receiving messages (binary frames) from the server
+let drowsinessTimeout = null; // Variable to hold the timeout for drowsiness detection
+const DROWSY_ACTIVATION_TIME = 3000; // Time in milliseconds to wait before activating warning (3 seconds)
+let isCurrentlyDrowsy = false; // To track the current drowsiness state
+let drowsinessStartTime = null; // Variable to track when drowsiness started
+let warningInterval = null; // Variable to hold the interval for continuous warnings
+
 ws.onmessage = (event) => {
-    const predictedBlob = event.data; // The binary image data received from the server
+    // Check if the received message is a Blob (image data)
+    if (event.data instanceof Blob) {
+        const predictedBlob = event.data;
 
-    // Check if the image element exists to update the image source
-    let imgElement = document.getElementById('predictedImage');
-    if (!imgElement) {
-        // Create an image element if it doesn't exist
-        imgElement = document.createElement('img');
-        imgElement.id = 'predictedImage';
-        imgElement.width = 740; // Set a fixed width for the displayed image
-        imgElement.height = 480; // Set a fixed height for the displayed image
-        document.getElementById('vid_result').appendChild(imgElement); // Append the image to the vid_result div
+        // Check if the image element exists to update the image source
+        let imgElement = document.getElementById('predictedImage');
+        if (!imgElement) {
+            // Create an image element if it doesn't exist
+            imgElement = document.createElement('img');
+            imgElement.id = 'predictedImage';
+            imgElement.width = 740; // Set a fixed width for the displayed image
+            imgElement.height = 480; // Set a fixed height for the displayed image
+            document.getElementById('vid_result').appendChild(imgElement); // Append the image to the vid_result div
+        }
+
+        // Create an object URL for the binary data (Blob) and update the image source
+        const url = URL.createObjectURL(predictedBlob);
+        imgElement.src = url;
+
+    } else if (typeof event.data === 'string') {
+        // Handle text message (predicted classes and drowsiness status)
+        const message = JSON.parse(event.data);
+        console.log('Predicted classes:', message.predictedClasses);
+        console.log('Drowsiness status:', message.isDrowsy); // Log drowsiness status
+
+        // Check for drowsiness detection logic
+        const isDrowsy = message.isDrowsy; // Boolean indicating if drowsiness was detected
+        
+        // Handle drowsiness state
+        if (isDrowsy) {
+            // If drowsiness is detected
+            if (!isCurrentlyDrowsy) {
+                // Start timing for drowsiness
+                drowsinessStartTime = Date.now();
+                isCurrentlyDrowsy = true; // Set drowsiness state
+            }
+
+            // Check how long the driver has been drowsy
+            const drowsinessDuration = Date.now() - drowsinessStartTime;
+
+            // Activate warning if drowsiness duration exceeds the threshold
+            if (drowsinessDuration >= DROWSY_ACTIVATION_TIME) {
+                showWarning(); // Show warning
+            }
+        } else {
+            // If not drowsy anymore, hide the warning and reset state
+            if (isCurrentlyDrowsy) {
+                hideWarning(); // Hide the warning
+                isCurrentlyDrowsy = false; // Reset drowsiness state
+                console.log('Warning hidden: No drowsiness detected.'); // Log warning hide
+            }
+            // Reset timer since driver is not drowsy
+            drowsinessStartTime = null; // Clear the drowsiness start time
+            clearTimeout(drowsinessTimeout); // Clear any existing timeout
+        }
     }
-
-    // Create an object URL for the binary data (Blob) and update the image source
-    const url = URL.createObjectURL(predictedBlob);
-    imgElement.src = url;
 };
+
+// Function to display the warning
+function showWarning() {
+    const warningElement = document.getElementById('warning');
+    const warningSound = document.getElementById('warningSound');
+
+    warningElement.style.display = 'block'; // Show warning
+    warningSound.play(); // Play warning sound
+    
+    // Set an interval to keep playing the warning sound every 1 second while drowsy
+    if (!warningInterval) {
+        warningInterval = setInterval(() => {
+            warningSound.currentTime = 0; // Reset sound playback to the beginning
+            warningSound.play(); // Play warning sound
+            console.log('Warning sound played repeatedly.');
+        }, 1000); // Play sound every second (1000 ms)
+    }
+}
+
+// Function to hide the warning
+function hideWarning() {
+    const warningElement = document.getElementById('warning');
+    warningElement.style.display = 'none'; // Hide warning
+    
+    // Clear the interval when not drowsy
+    if (warningInterval) {
+        clearInterval(warningInterval);
+        warningInterval = null; // Reset the interval variable
+        console.log('Continuous warning sound stopped.');
+    }
+}
 
 // Event listener for form submission (video input)
 document.getElementById('videoForm').addEventListener('submit', function (e) {
@@ -313,7 +391,7 @@ document.getElementById('videoForm').addEventListener('submit', function (e) {
                     ws.send(blob); // Send the Blob through WebSocket
                 }
             }, 'image/jpeg');
-        }, 100); // Adjust the interval (100ms here for 10 FPS)
+        }, 200); // Adjust the interval (200ms here for 5 FPS)
 
         // Stop capturing frames when the video ends
         videoElement.onended = () => {
@@ -322,10 +400,7 @@ document.getElementById('videoForm').addEventListener('submit', function (e) {
             canvas.remove(); // Clean up the canvas element
         };
     }
-
 });
-
-
     </script>
 </body>
 </html>

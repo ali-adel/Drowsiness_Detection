@@ -10,7 +10,7 @@ import time
 from ultralytics import YOLO
 import torch
 import cv2  
-
+import json
 
 
 # Load YOLO model (TensorRT)
@@ -62,7 +62,7 @@ async def websocket_endpoint(websocket: WebSocket):
     
     try:
         while True:
-            # Receive binary data from the client instead of base64 text
+            # Receive binary data from the client
             data = await websocket.receive_bytes()  # Receive binary image data
             
             # Convert bytes to NumPy array using OpenCV (faster than PIL)
@@ -75,11 +75,24 @@ async def websocket_endpoint(websocket: WebSocket):
             # Convert the YOLO result back to image format
             annotated_image = results[0].plot()  # This method should return the annotated image as a NumPy array
             
+            # Check detected boxes and get the predicted class
+            predicted_classes = []
+            for box in results[0].boxes:
+                class_id = int(box.cls)  # Get the class ID for the box
+                predicted_class = results[0].names[class_id]  # Map class ID to class name
+                predicted_classes.append(predicted_class)
+
+            # Check for drowsiness and prepare a message to send to the client
+            is_drowsy = 'Drowse' in predicted_classes  # Check if 'Drowse' is detected
+
             # Encode image back to JPEG format
             _, encoded_image = cv2.imencode('.jpg', annotated_image)
             
             # Send the binary image (encoded) back to the client
             await websocket.send_bytes(encoded_image.tobytes())
+            
+            # Send the prediction result (drowsiness status) to the client
+            await websocket.send_text(json.dumps({"isDrowsy": is_drowsy, "predictedClasses": predicted_classes}))
     
     except WebSocketDisconnect:
         print("Client disconnected")
@@ -141,7 +154,13 @@ async def websocket_endpoint(websocket: WebSocket):
             
             # Get the prediction from the YOLO model
             results = model_yolo(image_np)
-            
+            print(results)
+
+            # Assuming results[0] contains a list of detected objects with classes
+            # Extract the predicted classes from the results
+            predicted_classes = [result['class'] for result in results[0].boxes.data.tolist()]
+            print('Detected classes:', predicted_classes)  # Debugging output
+
             # Convert the YOLO result back to image format
             annotated_image = results[0].plot()  # This method should return the annotated image as a NumPy array
             
@@ -150,6 +169,8 @@ async def websocket_endpoint(websocket: WebSocket):
             
             # Send the binary image (encoded) back to the client
             await websocket.send_bytes(encoded_image.tobytes())
+            # Send the predicted classes back as a JSON string
+            await websocket.send_text(json.dumps(predicted_classes))
     
     except WebSocketDisconnect:
         print("Client disconnected")
