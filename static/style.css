@@ -23,9 +23,12 @@ body {
     display: flex;
     align-items: center;
     background-color: var(--header-bg-color);
-    padding: 0px 22px;
+    padding: 18px 22px;
     z-index: 10;
-    position: relative;
+    position: fixed; /* Make the header fixed */
+    top: 0; /* Position it at the top of the page */
+    left: 0; /* Ensure it stretches across the full width */
+    right: 0; /* Ensure it stretches across the full width */
 }
 
 /* Create a wrapper for logo and title */
@@ -41,16 +44,11 @@ body {
 }
 
 h1 {
-    margin: 19px 10px;
+    margin: 2px 10px;
     font-size: 24px;
     color: #FFF;
 }
 
-/* Navigation styles */
-nav {
-    display: flex;
-    gap: 20px;
-}
 
 /* Focus styles for accessibility */
 nav a:focus {
@@ -70,14 +68,15 @@ nav a:focus {
 
 nav {
     display: flex;
-    gap: 20px;
+    gap: 29px;
     flex-wrap: wrap;
 }
 
 nav a {
-    color: var(--text-color);
+    color: #FFC107;
     text-decoration: none;
     font-weight: bold;
+    font-size: 18px;
 }
 
 nav a:hover,
@@ -145,7 +144,7 @@ h2 {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    height: 154vh;
+    height: auto;
     margin: 0;
     overflow: auto;
 }
@@ -359,7 +358,7 @@ input[type="file"] {
     }
   }
 
-.btn {
+  .btn {
     border: none;
     width: 15em;
     height: 5em;
@@ -371,9 +370,9 @@ input[type="file"] {
     background: #797979d6;
     cursor: pointer;
     transition: all 450ms ease-in-out;
-    margin: 25px;
+    margin: 26px 77px;
 }
-  
+
   .sparkle {
     fill: #AAAAAA;
     transition: all 800ms ease;
@@ -421,9 +420,33 @@ p {
     margin-top: 10px; /* Add some space above the warning text */
     color: red; /* Set the warning text color */
     font-weight: bold; /* Make the text bold */
+    font-size: 24px;
 }
 
 #vid_result {
     margin: 26px;
-    text-align: center; /* Center align the text */
+    text-align: center;
+    box-shadow: 1px 1px 8px rgba(219, 202, 13, 0.735);
 }
+
+.brake {
+    width: 35px;
+    height: auto;
+    opacity: 1;
+    margin: -4px;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.hidden {
+    opacity: 0; /* Fully transparent (hidden) */
+    pointer-events: none; /* Prevent interaction */
+}
+
+#countdown{
+    font-size: 27px;
+}
+
+#video-detection {
+    height: auto;
+}
+

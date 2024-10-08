@@ -21,14 +21,13 @@
             <img src="/image/logo.png" alt="Logo" class="logo"> <!-- Update the logo path -->
             <h1>H O R</h1>
         </div>
-        
         <nav>
             <a href="#home">Home</a>
             <a href="#services">Services</a>
             <a href="#about">About</a>
             <a href="#detection">Image Prediction</a>
-            <a href="#video-detection">Video Prediction</a> 
-            <a href="#stream-detection">Streaming</a><!-- Added link to video prediction section -->
+            <a href="#video-detection">Video Prediction</a>
+            <a href="#stream-detection">Streaming</a> <!-- Added link to video prediction section -->
         </nav>
     </div>
     
@@ -106,9 +105,9 @@
 
 
     <section id="video-detection" class="form-section">
-        <h2> Drowsiness Detection Video Upload </h2>
+        <h2>Drowsiness Detection Video Upload</h2>
         <p>Upload a Video for drowsiness detection:</p>
-        <form id="videoForm" class="form-section">
+        <form id="videoForm" class="form-custome">
             <label for="videoInput" class="custum-file-upload">
                 <div class="icon">
                     <svg viewBox="0 0 24 24" fill="" xmlns="http://www.w3.org/2000/svg">
@@ -120,22 +119,26 @@
                 </div>
                 <input id="videoInput" type="file" name="file" accept="video/*" required>
             </label>
-    
             <button class="btn" id="videoButton" type="submit">
-                <svg height="24" width="24" fill="#FFFFFF" viewBox="0 0 24 24" data-name="Layer 1" id="Layer_1" class="sparkle">
+                <svg height="24" width="24" fill="#FFFFFF" viewBox="0 0 24 24" class="sparkle">
                     <path d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"></path>
                 </svg>
                 <span class="text">Detect Drowsiness</span>
             </button>
         </form>
-
+    
         <audio id="warningSound" src="/static/warning.mp3" preload="auto"></audio> 
-
+    
         <div id="vid_result" style="position: relative;">
-            
-            <div id="warning" style="display: none;">WARNING: Drowsiness Detected!</div>    
         </div>
-       
+        <div id="warning" style="display: none;">WARNING: Drowsiness Detected!</div>
+        <div id="brakeWarning" style="color:orange; display: none;"><span id="countdown"> Brakes Opened!
+            Car will stop in 3 seconds 
+        </span>
+        <span><img src="/image/brake.png" alt="Logo"  class="brake hidden" id="brakeIcon"></span>
+        </div>
+
+
     </section>
 
    
@@ -254,75 +257,77 @@ function stopStream() {
 
 
 // WebSocket connection setup
-const ws = new WebSocket('ws://localhost:8000/ws/video'); // Adjust URL as needed
+const ws = new WebSocket('ws://localhost:8000/ws/video'); 
 
-// Event handler for WebSocket connection
 ws.onopen = () => {
     console.log('WebSocket connection established');
 };
 
-// Event handler for receiving messages (binary frames) from the server
-let drowsinessTimeout = null; // Variable to hold the timeout for drowsiness detection
-const DROWSY_ACTIVATION_TIME = 3000; // Time in milliseconds to wait before activating warning (3 seconds)
-let isCurrentlyDrowsy = false; // To track the current drowsiness state
-let drowsinessStartTime = null; // Variable to track when drowsiness started
-let warningInterval = null; // Variable to hold the interval for continuous warnings
+// Variables for handling drowsiness logic and countdown
+let drowsinessTimeout = null; // To track drowsiness timeout
+const DROWSY_ACTIVATION_TIME = 3000; // Time (3 sec) to detect drowsiness before activating warning
+const BRAKE_ACTIVATION_TIME = 6000; // Time (6 sec) to activate brakes after drowsiness is detected
+let isCurrentlyDrowsy = false; // To track current drowsiness state
+let drowsinessStartTime = null; // To track when drowsiness started
+let warningInterval = null; // Interval for playing warning sound continuously
+let countdownTimeout = null; // Timeout for counting down the car stop
+let countdownTime = 3; // Countdown duration for car stop
+let warningMessageShown = false; // Track if the warning message has been shown
+let brakesMessageShown = false; // Track if the brakes message has been shown
 
 ws.onmessage = (event) => {
-    // Check if the received message is a Blob (image data)
     if (event.data instanceof Blob) {
+        // Display image as usual
         const predictedBlob = event.data;
 
-        // Check if the image element exists to update the image source
         let imgElement = document.getElementById('predictedImage');
         if (!imgElement) {
-            // Create an image element if it doesn't exist
             imgElement = document.createElement('img');
             imgElement.id = 'predictedImage';
-            imgElement.width = 740; // Set a fixed width for the displayed image
-            imgElement.height = 480; // Set a fixed height for the displayed image
-            document.getElementById('vid_result').appendChild(imgElement); // Append the image to the vid_result div
+            imgElement.width = 740;
+            imgElement.height = 480;
+            document.getElementById('vid_result').appendChild(imgElement);
         }
 
-        // Create an object URL for the binary data (Blob) and update the image source
         const url = URL.createObjectURL(predictedBlob);
         imgElement.src = url;
 
     } else if (typeof event.data === 'string') {
-        // Handle text message (predicted classes and drowsiness status)
+        // Handle text messages (like drowsiness detection)
         const message = JSON.parse(event.data);
         console.log('Predicted classes:', message.predictedClasses);
         console.log('Drowsiness status:', message.isDrowsy); // Log drowsiness status
 
-        // Check for drowsiness detection logic
         const isDrowsy = message.isDrowsy; // Boolean indicating if drowsiness was detected
-        
-        // Handle drowsiness state
+
+        // Drowsiness handling logic
         if (isDrowsy) {
-            // If drowsiness is detected
             if (!isCurrentlyDrowsy) {
-                // Start timing for drowsiness
-                drowsinessStartTime = Date.now();
-                isCurrentlyDrowsy = true; // Set drowsiness state
+                drowsinessStartTime = Date.now(); // Start timing for drowsiness
+                isCurrentlyDrowsy = true;
+                warningMessageShown = false; // Reset warning message flag
+                brakesMessageShown = false; // Reset brakes message flag
             }
 
-            // Check how long the driver has been drowsy
             const drowsinessDuration = Date.now() - drowsinessStartTime;
 
-            // Activate warning if drowsiness duration exceeds the threshold
-            if (drowsinessDuration >= DROWSY_ACTIVATION_TIME) {
-                showWarning(); // Show warning
+            if (drowsinessDuration >= DROWSY_ACTIVATION_TIME && !warningMessageShown) {
+                showWarning(); // Show the warning message
+                warningMessageShown = true; // Mark that warning is shown
+            }
+
+            // If driver remains drowsy for 6 seconds, activate brakes
+            if (drowsinessDuration >= BRAKE_ACTIVATION_TIME && !brakesMessageShown) {
+                showBrakeWarning(); // Show the brakes activation message
+                startCountdown(); // Start the countdown for stopping the car
+                brakesMessageShown = true; // Mark that brakes message is shown
             }
         } else {
-            // If not drowsy anymore, hide the warning and reset state
             if (isCurrentlyDrowsy) {
                 hideWarning(); // Hide the warning
-                isCurrentlyDrowsy = false; // Reset drowsiness state
-                console.log('Warning hidden: No drowsiness detected.'); // Log warning hide
+                hideBrakeWarning(); // Hide the brakes message
+                resetCountdown(); // Reset countdown and states
             }
-            // Reset timer since driver is not drowsy
-            drowsinessStartTime = null; // Clear the drowsiness start time
-            clearTimeout(drowsinessTimeout); // Clear any existing timeout
         }
     }
 };
@@ -332,30 +337,75 @@ function showWarning() {
     const warningElement = document.getElementById('warning');
     const warningSound = document.getElementById('warningSound');
 
-    warningElement.style.display = 'block'; // Show warning
-    warningSound.play(); // Play warning sound
-    
-    // Set an interval to keep playing the warning sound every 1 second while drowsy
+    warningElement.style.display = 'block';
+    warningSound.play();
+
     if (!warningInterval) {
         warningInterval = setInterval(() => {
-            warningSound.currentTime = 0; // Reset sound playback to the beginning
-            warningSound.play(); // Play warning sound
-            console.log('Warning sound played repeatedly.');
-        }, 1000); // Play sound every second (1000 ms)
+            warningSound.currentTime = 0;
+            warningSound.play();
+        }, 1000); // Play sound every second
     }
+}
+
+// Function to display brakes activation warning
+function showBrakeWarning() {
+    const brakeWarningElement = document.getElementById('brakeWarning');
+    brakeWarningElement.style.display = 'block'; // Show brakes message
+}
+
+// Function to start countdown when the brakes are activated
+function startCountdown() {
+    const countdownElement = document.getElementById('countdown');
+    countdownTime = 3; // Set countdown to 3 seconds
+
+    countdownElement.style.display = 'block'; // Show countdown display
+    countdownElement.innerText = `Brakes activated! Car will stop in ${countdownTime} seconds.`; // Initial message
+
+    // Countdown logic
+    countdownTimeout = setInterval(() => {
+        countdownTime -= 1; // Decrease countdown time
+
+        if (countdownTime > 0) {
+            countdownElement.innerText = `Brakes activated! Car will stop in ${countdownTime} seconds.`; // Update message
+        } else {
+            countdownElement.innerText = 'Car has stopped.'; // Final message when countdown reaches 0
+            clearInterval(countdownTimeout); // Stop the countdown
+        }
+    }, 1000); // Update every second
 }
 
 // Function to hide the warning
 function hideWarning() {
     const warningElement = document.getElementById('warning');
-    warningElement.style.display = 'none'; // Hide warning
-    
-    // Clear the interval when not drowsy
+    warningElement.style.display = 'none';
+
     if (warningInterval) {
         clearInterval(warningInterval);
-        warningInterval = null; // Reset the interval variable
-        console.log('Continuous warning sound stopped.');
+        warningInterval = null;
     }
+}
+
+// Function to hide the brake warning
+function hideBrakeWarning() {
+    const brakeWarningElement = document.getElementById('brakeWarning');
+    brakeWarningElement.style.display = 'none';
+}
+
+// Function to reset countdown and states when the driver becomes natural again
+function resetCountdown() {
+    const countdownElement = document.getElementById('countdown');
+    countdownElement.style.display = 'none'; // Hide countdown display
+
+    if (countdownTimeout) {
+        clearInterval(countdownTimeout); // Clear countdown if still active
+        countdownTimeout = null;
+    }
+
+    isCurrentlyDrowsy = false; // Reset drowsiness state
+    drowsinessStartTime = null; // Reset the drowsiness start time
+    warningMessageShown = false; // Reset warning message flag
+    brakesMessageShown = false; // Reset brakes message flag
 }
 
 // Event listener for form submission (video input)
@@ -371,36 +421,51 @@ document.getElementById('videoForm').addEventListener('submit', function (e) {
         videoElement.src = videoURL;
         videoElement.play();
 
-        // Create a canvas element to capture frames from the video
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
 
-        // Update the canvas size to match the video once metadata is loaded
         videoElement.onloadedmetadata = () => {
             canvas.width = videoElement.videoWidth;
             canvas.height = videoElement.videoHeight;
         };
 
-        // Capture frames at regular intervals and send them as binary (Blob)
         const intervalId = setInterval(() => {
-            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height); // Draw the current frame onto the canvas
+            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
-            // Convert the canvas content to Blob (JPEG format)
             canvas.toBlob(blob => {
                 if (blob) {
-                    ws.send(blob); // Send the Blob through WebSocket
+                    ws.send(blob);
                 }
             }, 'image/jpeg');
-        }, 200); // Adjust the interval (200ms here for 5 FPS)
+        }, 100);
 
-        // Stop capturing frames when the video ends
         videoElement.onended = () => {
-            clearInterval(intervalId); // Stop the interval loop
-            ws.close(); // Close the WebSocket connection when done
-            canvas.remove(); // Clean up the canvas element
+            clearInterval(intervalId);
+            ws.close();
+            canvas.remove();
         };
     }
 });
+// Function to toggle the visibility of the brake icon using the hidden class
+function toggleBrakeIcon(show) {
+    const brakeIcon = document.getElementById("brakeIcon");
+    if (show) {
+        brakeIcon.classList.remove("hidden");  // Show the icon by removing 'hidden' class
+    } else {
+        brakeIcon.classList.add("hidden");     // Hide the icon by adding 'hidden' class
+    }
+}
+
+// Show the brake icon automatically after a certain delay (e.g., 2 seconds)
+// Function to toggle the visibility of the brake icon
+function toggleBrakeIcon() {
+    const brakeIcon = document.getElementById("brakeIcon");
+    brakeIcon.classList.toggle("hidden"); // Toggle the hidden class
+}
+
+// Set interval to toggle the brake icon every 2 seconds
+setInterval(toggleBrakeIcon, 177); // Adjust the time as needed (2000ms = 2 seconds)
+
     </script>
 </body>
 </html>
