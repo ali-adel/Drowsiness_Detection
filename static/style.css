@@ -147,6 +147,7 @@ h2 {
     height: auto;
     margin: 0;
     overflow: auto;
+    min-height: 1000px;
 }
 
 
