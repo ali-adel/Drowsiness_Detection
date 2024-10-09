@@ -139,44 +139,6 @@ async def predict_yolo(file: UploadFile = File(...)):
     
 ################# Streaming 
 
-@app.websocket("/ws/video")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    
-    try:
-        while True:
-            # Receive binary data from the client instead of base64 text
-            data = await websocket.receive_bytes()  # Receive binary image data
-            
-            # Convert bytes to NumPy array using OpenCV (faster than PIL)
-            nparr = np.frombuffer(data, np.uint8)
-            image_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)  # Decode the image
-            
-            # Get the prediction from the YOLO model
-            results = model_yolo(image_np)
-            print(results)
-
-            # Assuming results[0] contains a list of detected objects with classes
-            # Extract the predicted classes from the results
-            predicted_classes = [result['class'] for result in results[0].boxes.data.tolist()]
-            print('Detected classes:', predicted_classes)  # Debugging output
-
-            # Convert the YOLO result back to image format
-            annotated_image = results[0].plot()  # This method should return the annotated image as a NumPy array
-            
-            # Encode image back to JPEG format
-            _, encoded_image = cv2.imencode('.jpg', annotated_image)
-            
-            # Send the binary image (encoded) back to the client
-            await websocket.send_bytes(encoded_image.tobytes())
-            # Send the predicted classes back as a JSON string
-            await websocket.send_text(json.dumps(predicted_classes))
-    
-    except WebSocketDisconnect:
-        print("Client disconnected")
-    except Exception as e:
-        await websocket.send_text(f"Error: {str(e)}")
-
 
 @app.websocket("/ws/stream")
 async def websocket_endpoint(websocket: WebSocket):
