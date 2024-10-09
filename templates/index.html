@@ -110,7 +110,9 @@
         <form id="videoForm" class="form-custome">
             <label for="videoInput" class="custum-file-upload">
                 <div class="icon">
-                    <!-- SVG icon here -->
+                    <svg viewBox="0 0 24 24" fill="" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z"></path>
+                    </svg>
                 </div>
                 <div class="text">
                     <span>Click to upload video</span>
@@ -118,7 +120,9 @@
                 <input id="videoInput" type="file" name="file" accept="video/*" required>
             </label>
             <button class="btn" id="videoButton" type="submit">
-                <!-- SVG icon here -->
+                <svg height="24" width="24" fill="#FFFFFF" viewBox="0 0 24 24" class="sparkle">
+                    <path d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"></path>
+                </svg>
                 <span class="text">Detect Drowsiness</span>
             </button>
         </form>
@@ -127,96 +131,248 @@
     
         <div id="vid_result" style="position: relative;">
         </div>
-        <div id="warning" style="display: none;">WARNING: Drowsiness Detected!</div>
-        <div id="brakeWarning" style="color:orange; display: none;">
-            <span id="countdown"> Brakes Opened! Car will stop in 3 seconds </span>
-            <span><img src="/image/brake.png" alt="Logo" class="brake hidden" id="brakeIcon"></span>
+        <div id="warning" style="display: none;" class="warning-message"><span>WARNING:</span> Drowsiness Detected!</div>
+        <div id="brakeWarning" style="color:orange; display: none;"><span id="countdown"> Brakes Opened!
+            Car will stop in 3 seconds 
+        </span>
+        <span><img src="/image/brake.png" alt="Logo"  class="brake hidden" id="brakeIcon"></span>
         </div>
+
+
     </section>
 
    
 <!------------------------------------ Streaming ----------------------------------------------->
 
-<section id="stream-detection" class="form-section">
+<section id="camera-stream" class="form-section">
     <h1>Camera Stream</h1>
-
     
-   <img id="stream" width="640" height="480"  style="box-shadow: 1px 1px 8px rgba(219, 202, 13, 0.735);"/>
-            <!--loadingSpinner-->
+    <canvas id="cameraStream" width="640" height="480" style="box-shadow: 1px 1px 8px rgba(219, 202, 13, 0.735);"></canvas>
+    
     <div class="loader" style="display: none;"></div>
-    <div id="connectionMessage" style="display: none; color:orange; text-align: center;">
+    
+    <div id="connectionMessageCamera" style="display: none; color: orange; text-align: center;">
         Establishing connection...
     </div>
-
-    <button class="btn" id="streamButton">
+    
+    <button class="btn" id="cameraStreamButton">
         <svg height="24" width="24" fill="#FFFFFF" viewBox="0 0 24 24" data-name="Layer 1" id="Layer_1" class="sparkle">
             <path d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"></path>
         </svg>
         <span class="text">Start Stream</span>
     </button>
-
+    
+    <audio id="warningSoundCamera" src="/static/warning.mp3" preload="auto"></audio>
+    
+    <!-- Warning and Brake Warning Messages -->
+    <div id="warningCamera" class="warning-message" style="display: none;"><span>Warning:</span> Drowsiness Detected!</div>
+    <div id="brakeWarningCamera" style="color:orange;display: none; ">
+        <span id="countdownCamera">Brakes Opened! Car will stop in 3 seconds</span>
+        <span><img src="/image/brake.png" alt="Logo" class="brake hidden" id="brakeIconCamera"></span>
+    </div>
 </section>
 
-
     <script>
-const video = document.getElementById("stream");
-const videoButton = document.getElementById("streamButton");
-const loadingSpinner = document.querySelector(".loader"); // Adjust to select the loader class
-const connectionMessage = document.getElementById("connectionMessage"); // Get the connection message element
-let stream; // Video stream WebSocket variable
-let isStreaming = false; // Streaming state
+const canvasStream = document.getElementById("cameraStream");
+const contextStream = canvasStream.getContext("2d");
+const streamButton = document.getElementById("cameraStreamButton");
+const loadingSpinnerStream = document.querySelector(".loader");
+const connectionMessageStream = document.getElementById("connectionMessageCamera");
 
-videoButton.onclick = function() {
-    if (!isStreaming) {
-        startStream();
+let videoStreamStream;
+let isStreamingStream = false;
+
+// Drowsiness detection logic variables
+let drowsinessTimeoutStream = null;
+const DROWSY_ACTIVATION_TIME_STREAM = 3000; // Time after which a warning is shown
+const BRAKE_ACTIVATION_TIME_STREAM = 6000; // Time after which brakes are activated
+let isCurrentlyDrowsyStream = false;
+let drowsinessStartTimeStream = null;
+let warningMessageShownStream = false;
+let brakesMessageShownStream = false;
+let warningIntervalStream = null;
+let countdownIntervalStream = null;
+const countdownDurationStream = 3; // 3 seconds countdown
+
+// Start/Stop stream button
+streamButton.onclick = function () {
+    if (!isStreamingStream) {
+        startVideoStream();
     } else {
-        stopStream();
+        stopVideoStream();
     }
 };
 
-function startStream() {
-    loadingSpinner.style.display = "block"; // Show the loading spinner
-    connectionMessage.style.display = "block"; // Show the connection message
+// Start the video stream
+function startVideoStream() {
+    loadingSpinnerStream.style.display = "block";
+    connectionMessageStream.style.display = "block";
 
-    // Start video WebSocket
-    stream = new WebSocket("ws://localhost:8000/ws/stream");
+    videoStreamStream = new WebSocket("ws://localhost:8000/ws/stream");
 
-    stream.onopen = function() {
-        loadingSpinner.style.display = "none"; // Hide spinner when the stream opens
-        connectionMessage.style.display = "none"; // Hide connection message
-        isStreaming = true; // Update streaming state
-        videoButton.querySelector('.text').textContent = "Stop Stream"; // Update button text
+    videoStreamStream.onopen = function () {
+        loadingSpinnerStream.style.display = "none";
+        connectionMessageStream.style.display = "none";
+        isStreamingStream = true;
+        streamButton.querySelector('.text').textContent = "Stop Stream";
     };
 
-    stream.onmessage = function(event) {
+    videoStreamStream.onmessage = function (event) {
         const blob = new Blob([event.data], { type: 'image/jpeg' });
         const url = URL.createObjectURL(blob);
-        video.src = url; // Set image source
-        video.onload = function() {
+
+        const img = new Image();
+        img.src = url; // Set image source
+        img.onload = function () {
+            contextStream.drawImage(img, 0, 0, canvasStream.width, canvasStream.height); // Draw image on canvas
             URL.revokeObjectURL(url); // Release memory
         };
+
+        handleDrowsinessDetectionStream(event.data); // Handle drowsiness detection
     };
 
-    stream.onerror = function(error) {
+    videoStreamStream.onerror = function (error) {
         console.error("WebSocket error:", error);
-        loadingSpinner.style.display = "none"; // Hide spinner on error
-        connectionMessage.style.display = "none"; // Hide connection message on error
+        loadingSpinnerStream.style.display = "none";
+        connectionMessageStream.style.display = "none";
     };
 
-    stream.onclose = function() {
+    videoStreamStream.onclose = function () {
         console.log("WebSocket connection closed");
-        isStreaming = false;
-        videoButton.querySelector('.text').textContent = "Start Stream"; // Update button text
-        loadingSpinner.style.display = "none"; // Hide spinner when the stream closes
-        connectionMessage.style.display = "none"; // Hide connection message when the stream closes
+        isStreamingStream = false;
+        streamButton.querySelector('.text').textContent = "Start Stream";
+        loadingSpinnerStream.style.display = "none";
+        connectionMessageStream.style.display = "none";
     };
 }
 
-function stopStream() {
-    if (stream) {
-        stream.close(); // Close video WebSocket connection
+// Stop the video stream
+function stopVideoStream() {
+    if (videoStreamStream) {
+        videoStreamStream.close();
     }
 }
+
+// Handle drowsiness detection messages
+function handleDrowsinessDetectionStream(data) {
+    const message = JSON.parse(data); // Assuming the server sends JSON
+    const isDrowsyStream = message.isDrowsy; // Boolean indicating if drowsiness was detected
+
+    // Drowsiness handling logic
+    if (isDrowsyStream) {
+        if (!isCurrentlyDrowsyStream) {
+            drowsinessStartTimeStream = Date.now(); // Start timing for drowsiness
+            isCurrentlyDrowsyStream = true;
+            warningMessageShownStream = false; // Reset warning message flag
+            brakesMessageShownStream = false; // Reset brakes message flag
+        }
+
+        const drowsinessDurationStream = Date.now() - drowsinessStartTimeStream;
+
+        if (drowsinessDurationStream >= DROWSY_ACTIVATION_TIME_STREAM && !warningMessageShownStream) {
+            showWarningStream(); // Show the warning message
+            warningMessageShownStream = true; // Mark that warning is shown
+        }
+
+        // If driver remains drowsy for 6 seconds, activate brakes
+        if (drowsinessDurationStream >= BRAKE_ACTIVATION_TIME_STREAM && !brakesMessageShownStream) {
+            showBrakeWarningStream(); // Show the brakes activation message
+            brakesMessageShownStream = true; // Mark that brakes message is shown
+        }
+    } else {
+        if (isCurrentlyDrowsyStream) {
+            hideWarningStream(); // Hide the warning
+            hideBrakeWarningStream(); // Hide the brakes message
+            resetDrowsinessStateStream(); // Reset drowsiness state
+        }
+    }
+}
+
+// Function to display the warning
+function showWarningStream() {
+    const warningElementStream = document.getElementById('warningCamera'); // Updated ID
+    const warningSoundStream = document.getElementById('warningSoundCamera'); // Reference to warning sound
+
+    warningElementStream.style.display = 'block'; // Show warning message
+    warningSoundStream.play(); // Play the warning sound
+
+    // Optional: Repeat the sound at intervals
+    if (!warningIntervalStream) {
+        warningIntervalStream = setInterval(() => {
+            warningSoundStream.currentTime = 0; // Reset sound to the start
+            warningSoundStream.play(); // Play sound again
+        }, 1000); // Play sound every second
+    }
+}
+
+// Function to display brakes activation warning with countdown
+function showBrakeWarningStream() {
+    const brakeWarningElementStream = document.getElementById('brakeWarningCamera'); // Updated ID
+    const countdownElementStream = document.getElementById('countdownCamera'); // Updated countdown element ID
+    brakeWarningElementStream.style.display = 'block'; // Show brakes message
+
+    let countdown = countdownDurationStream; // Start countdown from 3 seconds
+    countdownElementStream.textContent = `Brakes Opened! Car will stop in ${countdown} seconds`; // Set initial message
+
+    // Countdown logic
+    countdownIntervalStream = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+            countdownElementStream.textContent = `Brakes Opened! Car will stop in ${countdown} seconds`; // Update message
+        } else {
+            clearInterval(countdownIntervalStream); // Stop countdown
+            countdownElementStream.textContent = `Car has stopped`; // Change message after countdown
+            // Optionally, you can hide the brake warning after a delay if needed
+            setTimeout(hideBrakeWarningStream, 3000); // Hide the brake warning after 3 seconds
+        }
+    }, 1000); // Update every second
+}
+// Function to hide the warning
+function hideWarningStream() {
+    const warningElementStream = document.getElementById('warningCamera'); // Updated ID
+    warningElementStream.style.display = 'none'; // Hide warning message
+
+    if (warningIntervalStream) {
+        clearInterval(warningIntervalStream); // Clear the interval to stop the sound
+        warningIntervalStream = null; // Reset the interval variable
+    }
+}
+
+// Function to hide the brake warning
+function hideBrakeWarningStream() {
+    const brakeWarningElementStream = document.getElementById('brakeWarningCamera'); // Updated ID
+    brakeWarningElementStream.style.display = 'none'; // Hide brakes message
+    clearInterval(countdownIntervalStream); // Clear countdown interval
+}
+
+// Function to reset drowsiness state when the driver becomes active
+function resetDrowsinessStateStream() {
+    isCurrentlyDrowsyStream = false; // Reset drowsiness flag
+    drowsinessStartTimeStream = null; // Clear the start time
+    warningMessageShownStream = false; // Reset warning message shown flag
+    brakesMessageShownStream = false; // Reset brakes message shown flag
+    hideBrakeWarningStream(); // Ensure brakes message is hidden
+}
+
+function toggleBrakeIconCamera(show) {
+    const brakeIcon = document.getElementById("brakeIconCamera");
+    if (show) {
+        brakeIcon.classList.remove("hidden");  // Show the icon by removing 'hidden' class
+    } else {
+        brakeIcon.classList.add("hidden");     // Hide the icon by adding 'hidden' class
+    }
+}
+
+// Show the brake icon automatically after a certain delay (e.g., 2 seconds)
+// Function to toggle the visibility of the brake icon
+function toggleBrakeIconCamera() {
+    const brakeIcon = document.getElementById("brakeIconCamera");
+    brakeIcon.classList.toggle("hidden"); // Toggle the hidden class
+}
+
+// Set interval to toggle the brake icon every 2 seconds
+setInterval(toggleBrakeIconCamera, 177); // Adjust the time as needed (2000ms = 2 seconds)
+
 /////////////////////////////////////////////////////////////////////////
         document.getElementById("imagetButton").onclick = async () => {
             const fileInput = document.getElementById("imageInput");
@@ -249,7 +405,7 @@ function stopStream() {
         };
 
 
-// WebSocket connection setup
+//WebSocket connection setup
 const ws = new WebSocket('ws://localhost:8000/ws/video'); 
 
 ws.onopen = () => {
@@ -257,16 +413,18 @@ ws.onopen = () => {
 };
 
 // Variables for handling drowsiness logic and countdown
-let drowsinessTimeout = null; // To track drowsiness timeout
-const DROWSY_ACTIVATION_TIME = 3000; // Time (3 sec) to detect drowsiness before activating warning
-const BRAKE_ACTIVATION_TIME = 6000; // Time (6 sec) to activate brakes after drowsiness is detected
-let isCurrentlyDrowsy = false; // To track current drowsiness state
-let drowsinessStartTime = null; // To track when drowsiness started
-let warningInterval = null; // Interval for playing warning sound continuously
 let countdownTimeout = null; // Timeout for counting down the car stop
 let countdownTime = 3; // Countdown duration for car stop
-let warningMessageShown = false; // Track if the warning message has been shown
-let brakesMessageShown = false; // Track if the brakes message has been shown
+
+let drowsinessTimeout = null;
+const DROWSY_ACTIVATION_TIME = 3000; // Time after which a warning is shown
+const BRAKE_ACTIVATION_TIME = 6000; // Time after which brakes are activated
+let isCurrentlyDrowsy = false;
+let drowsinessStartTime = null;
+let warningMessageShown = false;
+let brakesMessageShown = false;
+let warningInterval = null;
+
 
 ws.onmessage = (event) => {
     if (event.data instanceof Blob) {

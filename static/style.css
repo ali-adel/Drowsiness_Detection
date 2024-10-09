@@ -419,7 +419,7 @@ p {
 
 #warning {
     margin-top: 10px; /* Add some space above the warning text */
-    color: red; /* Set the warning text color */
+    color: rgb(255, 255, 255); /* Set the warning text color */
     font-weight: bold; /* Make the text bold */
     font-size: 24px;
 }
@@ -443,11 +443,29 @@ p {
     pointer-events: none; /* Prevent interaction */
 }
 
-#countdown{
-    font-size: 27px;
-}
 
 #video-detection {
     height: auto;
+}
+
+#warning_stream {
+    margin-top: 10px; /* Add some space above the warning text */
+    color: red; /* Set the warning text color */
+    font-weight: bold; /* Make the text bold */
+    font-size: 24px;
+}
+#brakeWarning{
+    font-size: 40px;
+}
+.warning-message span {
+    color: red;
+}
+
+#warningCamera{
+    font-size: 30px;
+}
+
+#countdownCamera {
+    font-size: 40px;
 }
 

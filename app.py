@@ -160,12 +160,25 @@ async def websocket_endpoint(websocket: WebSocket):
             results = model_yolo(frame)
             annotated_frame = results[0].plot()  # Annotated frame
 
+            # Check detected boxes and get the predicted classes
+            predicted_classes = []
+            for box in results[0].boxes:
+                class_id = int(box.cls)  # Get the class ID for the box
+                predicted_class = results[0].names[class_id]  # Map class ID to class name
+                predicted_classes.append(predicted_class)
+
+            # Check for drowsiness and prepare a message to send to the client
+            is_drowsy = 'Drowse' in predicted_classes  # Check if 'Drowse' is detected
+
             # Encode the annotated frame to JPEG format
             _, buffer = cv2.imencode('.jpg', annotated_frame)
             frame_bytes = buffer.tobytes()
 
             # Send the frame bytes to the WebSocket
             await websocket.send_bytes(frame_bytes)
+
+            # Send the prediction result (drowsiness status) to the client
+            await websocket.send_text(json.dumps({"isDrowsy": is_drowsy, "predictedClasses": predicted_classes}))
 
     except WebSocketDisconnect:
         print("Client disconnected")
