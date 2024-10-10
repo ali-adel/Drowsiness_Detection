@@ -68,8 +68,9 @@ nav a:focus {
 
 nav {
     display: flex;
-    gap: 29px;
+    gap: 35px;
     flex-wrap: wrap;
+    margin-right: 50px;
 }
 
 nav a {
@@ -91,7 +92,9 @@ section {
     border-bottom: 2px solid var(--border-color);
     position: relative;
     z-index: 5;
-    height: 213px;
+    height: auto;
+    min-height: 250px;
+
 }
 
 
@@ -123,10 +126,22 @@ h2 {
 .service-card p {
     max-width: 100%;
     height: auto;
-    font-size: 15px;
+    font-size: 17px;
+    margin: 3px;
+    padding: 1px;
 }
 
-
+.service-card h3 {
+    color: #FFC107;
+}
+#breif {
+    font-size: 23px;
+    padding: 68px;
+}
+#breif span {
+    color: #FFC107;
+    font-size: 27px;
+}
 .service-card img {
     max-width: 100%;
     height: auto;
@@ -368,7 +383,7 @@ input[type="file"] {
     justify-content: center;
     align-items: center;
     gap: 8px;
-    background: #797979d6;
+    background: var(--card-bg-color);
     cursor: pointer;
     transition: all 450ms ease-in-out;
     margin: 26px 77px;
@@ -386,11 +401,11 @@ input[type="file"] {
   }
   
   .btn:hover {
-    background: linear-gradient(0deg,#dddd39,#c4bc1b);
-    box-shadow: inset 0px 1px 0px 0px rgba(163, 152, 37, 0.4),
-    inset 0px -4px 0px 0px rgba(216, 232, 36, 0.2),
-    0px 0px 0px 4px rgba(188, 183, 48, 0.217),
-    0px 0px 180px 0px #f5de1078;
+    background: linear-gradient(0deg,#FFC107,#d1a213);
+    box-shadow: inset 0px 1px 0px 0px rgba(250, 207, 15, 0.4),
+    inset 0px -4px 0px 0px rgba(243, 195, 39, 0.2),
+    0px 0px 0px 4px rgba(244, 202, 49, 0.217),
+    0px 0px 180px 0px #f0be2978;
     transform: translateY(-2px);
   }
   
@@ -469,3 +484,89 @@ p {
     font-size: 40px;
 }
 
+.welcome h2 {
+    margin: 52px;
+    font-size: 50px;
+}
+
+#Welcometo {
+    margin: -46px;
+}
+
+#Welcometo span {
+    color: #FFC107;
+}
+
+footer {
+    position: relative;
+    z-index: 10;
+    background-color: rgb(23 22 22 / 87%);
+    padding: 20px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer-section {
+    flex: 1;
+    margin: 10px;
+}
+
+.footer-section h3 {
+    border-bottom: 2px solid #fff;
+    padding-bottom: 5px;
+}
+
+
+.footer-section p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+.contact p {
+    font-size: 19px;
+}
+.contact a {
+    font-size: 21px;
+    color: #5681bf;
+}
+.footer-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin: 5px 0;
+}
+
+.footer-section ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    margin-top: 20px;
+    border-top: 1px solid #fff;
+    padding-top: 10px;
+}
+
+.footer-content span {
+    color: #FFC107;
+}
+
+.fa-brands, .fab {
+    font-family: "Font Awesome 6 Brands";
+    font-weight: 400;
+    margin-right: 4px;
+}
+
+.fa-linkedin-in:before{
+    margin-right: 10px;
+}

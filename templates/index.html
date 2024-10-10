@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drowsiness Detection</title>
     <link rel="stylesheet" href="/static/style.css"> <!-- Link to external CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <style>
         #result img {
         max-width: 50%;
@@ -25,9 +27,9 @@
             <a href="#home">Home</a>
             <a href="#services">Services</a>
             <a href="#about">About</a>
-            <a href="#detection">Image Prediction</a>
-            <a href="#video-detection">Video Prediction</a>
-            <a href="#stream-detection">Streaming</a> <!-- Added link to video prediction section -->
+            <a href="#detection"> Image</a>
+            <a href="#video-detection"></i> Video</a>
+            <a href="#stream-detection"></i> Streaming</a>
         </nav>
     </div>
     
@@ -38,40 +40,38 @@
         </video>
 
         <h2>
-            <span>Welcome to H O R</span><br>
+            <div id="Welcometo">Welcome to <span>H O R</span></div><br>
             <span>Our Drowsiness Detection System</span>
         </h2>
-        <h3 >
-            Our advanced Drowsiness Detection System employs cutting-edge technology to monitor driver alertness and reduce the risk of accidents caused by fatigue. Utilizing real-time facial recognition and behavioral analysis, our system detects signs of drowsiness and alerts drivers through audio and visual warnings. By integrating seamlessly with vehicles, we aim to enhance road safety and provide a reliable solution for preventing fatigue-related incidents. Trust H O R to keep you and your loved ones safe on the road.
-        </h3>
     </section>
     
     <section id="services">
         <h2>Our Services</h2>
+        <h3 id="breif">
+            Our advanced Drowsiness Detection System uses real-time facial recognition and behavioral analysis to monitor driver alertness and prevent fatigue-related accidents. It detects drowsiness and provides instant audio and visual alerts, enhancing road safety. Seamlessly integrated into vehicles, <span>H O R</span> offers a reliable solution to keep you and your loved ones safe on the road.
+        </h3>
         <div class="services">
             <div class="service-card">
-                <img src="/image/img2.jpeg" alt="Morning Detection">
-                <h3>Morning Detection</h3>
-                <p>Detect drowsiness in the early hours with our advanced morning detection technology, ensuring you stay alert on the road.</p>
+                <img src="/image/integration.jpeg" alt="Night Detection">
+                <h3 >Integration Capability</h3>
+                <p>Our system seamlessly integrates with vehicle platforms, providing real-time alerts, enhanced safety, all while maintaining a compact size for easy installation and minimal impact on vehicle design.</p>
             </div>
             <div class="service-card">
-                <img src="/image/img3.jpeg" alt="Night Detection">
-                <h3 >Night Detection</h3>
-                <p>Stay safe during nighttime driving with our cutting-edge detection solutions tailored for low-light conditions.</p>
-            </div>
-            <div class="service-card">
-                <img src="/image/img4.jpeg" alt="Emergency Alert">
+                <img src="/image/alert.jpeg" alt="Emergency Alert">
                 <h3>Emergency Alert</h3>
-                <p>In case of drowsiness, our system sends emergency alerts to prevent accidents and ensure your safety.</p>
+                <p>Our system instantly sends emergency alerts when drowsiness is detected, providing real-time notifications to help prevent accidents and ensure your safety by keeping you aware and responsive on the road.</p>
+            </div>
+            <div class="service-card">
+                <img src="/image/brake_ser.jpeg" alt="Brake Activation">
+                <h3>Brake Activation</h3>
+                <p>Our system automatically activates the vehicle's brakes after prolonged drowsiness detection, preventing accidents and ensuring the safety of both the driver and others on the road.</p>
             </div>
         </div>
     </section>
 
     <section id="about">
         <h2>About Us</h2>
-        <p>
-            H O R is dedicated to developing innovative solutions for driver safety. Our team of experts combines technology and research to create effective drowsiness detection systems, providing peace of mind on the road. We are committed to enhancing road safety through reliable and efficient solutions.
-        </p>
+
     </section>
 
     <section id="detection" class="form-section">
@@ -171,6 +171,7 @@
         <span><img src="/image/brake.png" alt="Logo" class="brake hidden" id="brakeIconCamera"></span>
     </div>
 </section>
+
 
     <script>
 const canvasStream = document.getElementById("cameraStream");
@@ -634,5 +635,35 @@ function toggleBrakeIcon() {
 setInterval(toggleBrakeIcon, 177); // Adjust the time as needed (2000ms = 2 seconds)
 
     </script>
+
+
+
 </body>
+<footer>
+    <div class="footer-content">
+        <div class="footer-section about">
+            <h3>About Us</h3>
+            <p>
+                <span>H O R</span>  is dedicated to enhancing road safety through advanced drowsiness detection technology. Our system uses real-time facial recognition and behavioral analysis to monitor driver alertness and prevent fatigue-related accidents.
+            </p>
+        </div>
+        <div class="footer-section contact">
+            <h3>Contact Us</h3>
+            <p>Email: <a href="aliadelsaid2003@gmail.com">aliadelsaid2003@gmail.com</a></p>
+            <p>Phone: <a href="tel:01205031736">+20 01205031736</a></p>
+        </div>
+        <div class="footer-section social">
+            <h3>Follow Us</h3>
+            <ul>
+                <li><a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                <li><a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                <li ><a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin-in"></i> LinkedIn</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 H O R. All rights reserved.</p>
+    </div>
+</footer>
+
 </html>
