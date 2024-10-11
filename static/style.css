@@ -162,7 +162,7 @@ h2 {
     height: auto;
     margin: 0;
     overflow: auto;
-    min-height: 1000px;
+    min-height: 1133px;
 }
 
 
@@ -389,36 +389,49 @@ input[type="file"] {
     margin: 26px 77px;
 }
 
-  .sparkle {
+/* Responsive Button Styles */
+@media (max-width: 768px) {
+    .btn {
+        width: 12em; /* Decrease button width */
+        height: 4em; /* Decrease button height */
+        margin: 20px 40px; /* Adjust margins */
+    }
+
+    .text {
+        font-size: 14px; /* Smaller text size for buttons */
+    }
+}
+
+.sparkle {
     fill: #AAAAAA;
     transition: all 800ms ease;
-  }
-  
-  .text {
+}
+
+.text {
     font-weight: 600;
     color: #AAAAAA;
     font-size: medium;
-  }
-  
-  .btn:hover {
+}
+
+.btn:hover {
     background: linear-gradient(0deg,#FFC107,#d1a213);
     box-shadow: inset 0px 1px 0px 0px rgba(250, 207, 15, 0.4),
     inset 0px -4px 0px 0px rgba(243, 195, 39, 0.2),
     0px 0px 0px 4px rgba(244, 202, 49, 0.217),
     0px 0px 180px 0px #f0be2978;
     transform: translateY(-2px);
-  }
-  
-  .btn:hover .text {
+}
+
+.btn:hover .text {
     color: white;
-  }
-  
-  .btn:hover .sparkle {
+}
+
+.btn:hover .sparkle {
     fill: white;
     transform: scale(1.2);
-  } 
+}
 
-  /* Optional: Style for the result container */
+/* Optional: Style for the result container */
 #result {
     display: flex;
     justify-content: center;
@@ -430,6 +443,13 @@ p {
     margin-top: 18px;
     margin-bottom: 39px;
     font-size: 26px;
+}
+
+/* Responsive Text */
+@media (max-width: 768px) {
+    p {
+        font-size: 18px; /* Decrease paragraph font size */
+    }
 }
 
 #warning {
@@ -445,6 +465,13 @@ p {
     box-shadow: 1px 1px 8px rgba(219, 202, 13, 0.735);
 }
 
+/* Responsive Video Result */
+@media (max-width: 768px) {
+    #vid_result {
+        margin: 16px; /* Decrease margin */
+    }
+}
+
 .brake {
     width: 35px;
     height: auto;
@@ -458,7 +485,6 @@ p {
     pointer-events: none; /* Prevent interaction */
 }
 
-
 #video-detection {
     height: auto;
 }
@@ -469,24 +495,55 @@ p {
     font-weight: bold; /* Make the text bold */
     font-size: 24px;
 }
-#brakeWarning{
+
+#brakeWarning {
     font-size: 40px;
 }
+
+/* Responsive Brake Warning */
+@media (max-width: 768px) {
+    #brakeWarning {
+        font-size: 30px; /* Decrease font size */
+    }
+}
+
 .warning-message span {
     color: red;
 }
 
-#warningCamera{
+#warningCamera {
     font-size: 30px;
+}
+
+/* Responsive Warning Camera */
+@media (max-width: 768px) {
+    #warningCamera {
+        font-size: 24px; /* Decrease font size */
+    }
 }
 
 #countdownCamera {
     font-size: 40px;
 }
 
+/* Responsive Countdown Camera */
+@media (max-width: 768px) {
+    #countdownCamera {
+        font-size: 30px; /* Decrease font size */
+    }
+}
+
 .welcome h2 {
     margin: 52px;
     font-size: 50px;
+}
+
+/* Responsive Welcome */
+@media (max-width: 768px) {
+    .welcome h2 {
+        font-size: 36px; /* Decrease font size */
+        margin: 30px; /* Adjust margin */
+    }
 }
 
 #Welcometo {
@@ -502,6 +559,18 @@ footer {
     z-index: 10;
     background-color: rgb(23 22 22 / 87%);
     padding: 20px;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    footer {
+        padding: 10px; /* Decrease padding */
+    }
+
+    .footer-content {
+        flex-direction: column; /* Stack footer sections */
+        align-items: center; /* Center align */
+    }
 }
 
 .footer-content {
@@ -520,18 +589,20 @@ footer {
     padding-bottom: 5px;
 }
 
-
 .footer-section p {
     margin: 5px 0;
     font-size: 16px;
 }
+
 .contact p {
     font-size: 19px;
 }
+
 .contact a {
     font-size: 21px;
     color: #5681bf;
 }
+
 .footer-section ul {
     list-style-type: none;
     padding: 0;
@@ -561,12 +632,21 @@ footer {
     color: #FFC107;
 }
 
-.fa-brands, .fab {
+.fa-brands,
+.fab {
     font-family: "Font Awesome 6 Brands";
     font-weight: 400;
     margin-right: 4px;
 }
 
-.fa-linkedin-in:before{
+.fa-linkedin-in:before {
     margin-right: 10px;
+}
+
+/* Responsive Font Awesome Icons */
+@media (max-width: 768px) {
+    .fa-brands,
+    .fab {
+        font-size: 18px; /* Decrease icon size */
+    }
 }
