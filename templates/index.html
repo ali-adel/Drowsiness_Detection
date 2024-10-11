@@ -155,12 +155,16 @@
     <h1>Camera Stream</h1>
     
     <canvas id="cameraStream" width="640" height="480" style="box-shadow: 1px 1px 8px rgba(219, 202, 13, 0.735);"></canvas>
-    
-    <div class="loader" style="display: none;"></div>
-    
-    <div id="connectionMessageCamera" style="display: none; color: orange; text-align: center;">
-        Establishing connection...
+    <div class="loader_container" style="    display: block ;min-height: 97px ;position: relative; margin: 20px;">
+        <div id="connectionMessageCamera" style="display: none; color: orange; text-align: center; margin-top: 20px;">
+            Establishing connection...
+        </div>
+        <div class="loader" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <!-- Loader content goes here -->
+        </div>
+
     </div>
+
     
     <button class="btn" id="cameraStreamButton">
         <svg height="24" width="24" fill="#FFFFFF" viewBox="0 0 24 24" data-name="Layer 1" id="Layer_1" class="sparkle">

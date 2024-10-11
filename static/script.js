@@ -17,7 +17,7 @@ let warningMessageShownStream = false;
 let brakesMessageShownStream = false;
 let warningIntervalStream = null;
 let countdownIntervalStream = null;
-const countdownDurationStream = 3; // 3 seconds countdown
+const countdownDurationStream = 6; // 3 seconds countdown
 
 // Add a variable for the brake sound interval
 let brakeSoundIntervalStream = null;
