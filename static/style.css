@@ -190,7 +190,7 @@ section {
   border-bottom: 2px solid var(--border-color);
   position: relative;
   z-index: 5;
-  height: 100vh;
+  height: 181vh;
   min-height: 250px;
 }
 #home {
@@ -200,6 +200,7 @@ section {
 #home h2 {
   flex: 1;
   align-content: center;
+  margin-top: -600px;
 }
 
 h2 {
@@ -249,7 +250,7 @@ h2 {
 .service-card img {
   max-width: 100%;
   height: auto;
-  border-radius: 5px;
+  border-radius: 12px;
 }
 
 .service-card:hover {
@@ -760,4 +761,76 @@ footer {
   .fab {
     font-size: 18px; /* Decrease icon size */
   }
+}
+
+
+.partners {
+  display: flex;                 /* Use flexbox layout */
+  justify-content: space-around; /* Space the items evenly */
+  align-items: center;          /* Center items vertically */
+  margin-top: 20px;
+  flex-wrap: wrap;              /* Allow items to wrap on smaller screens */
+}
+
+.partner {
+  text-align: center;
+  flex: 1 1 30%;                /* Flexible basis for partner divs */
+  margin: 10px;                 /* Spacing around each partner div */
+  min-width: 200px;             /* Minimum width for partner divs */
+}
+
+.image-container {
+  width: 210px;
+  height: 210px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;      /* Center the container in the partner */
+}
+
+.partner img {
+  width: 80%;                   /* Maintain original aspect ratio, adjust for larger size */
+  height: auto;                 /* Maintain aspect ratio */
+  max-height: 80%;              /* Ensure image fits inside the circle */
+}
+
+.service-card.supervisor{
+  margin: 36px;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 600px) {
+  .partner {
+      flex: 1 1 45%;            /* Adjusts to 45% width on smaller screens */
+  }
+
+  .partner img {
+      max-height: 60px;         /* Adjusts image size for smaller screens */
+  }
+}
+
+/* Media query for extra small screens */
+@media (max-width: 400px) {
+  .partner {
+      flex: 1 1 100%;           /* Takes full width on very small screens */
+  }
+
+  .partner img {
+      max-height: 50px;         /* Further adjusts image size for very small screens */
+  }
+}
+
+.linkedin-icon {
+  display: inline-block;
+  margin-top: 25px;
+  color: #0077B5;
+  font-size: 37px;
+  text-decoration: none;
+
+}
+
+.linkedin-icon:hover {
+  color: #005582;               /* Darker blue on hover */
 }
