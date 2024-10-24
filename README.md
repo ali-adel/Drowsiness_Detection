@@ -12,7 +12,6 @@ Welcome to the HOR project, an initiative focused on real-time drowsiness detect
 - [Source Code](#source-code)
 - [Scientific Papers](#scientific-papers)
 - [Installation](#installation)
-- [Contributing](#contributing)
 
 ## Videos
 
