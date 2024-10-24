@@ -35,7 +35,7 @@ The HOR project aims to enhance safety and awareness by effectively detecting dr
 
 ## Website
 
-The HOR website provides an interactive platform for users to experience our drowsiness detection capabilities. Key features include:
+HOR website provides an interactive platform for users to experience our drowsiness detection capabilities. Key features include:
 
 - **Image Prediction:** Upload images to analyze facial features indicative of drowsiness.
 - **Video Prediction:** Upload videos to monitor drowsiness levels over time.
