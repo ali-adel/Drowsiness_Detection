@@ -41,7 +41,6 @@ The HOR website provides an interactive platform for users to experience our dro
 - **User-Friendly Interface:** Easy navigation for all users.
 - **Model Insights:** Detailed information about the underlying technology and performance metrics.
 
-You can access the website [here](link).
 
 ## Source Code
 
