@@ -45,13 +45,13 @@ HOR website provides an interactive platform for users to experience our drowsin
 
 ## Source Code
 
- contains the implementation of the drowsiness detection model, including:
+The source code contains the implementation of the drowsiness detection model, including:
 
 - Model architecture and training scripts
 - Image and video processing functions
-- Real-time monitoring algorithms
+- a comprehensive Jupyter notebook that covers all the code for the project, including optimized versions of the model and functions for real-time performance.
 
-To explore the source code, navigate to the `source_code` folder.
+To explore the source code and the notebook, navigate to the `source_code` folder.
 
 ## Scientific Papers
 
