@@ -44,7 +44,7 @@ The HOR website provides an interactive platform for users to experience our dro
 
 ## Source Code
 
-The source code folder contains the implementation of the drowsiness detection model, including:
+ contains the implementation of the drowsiness detection model, including:
 
 - Model architecture and training scripts
 - Image and video processing functions
@@ -54,7 +54,7 @@ To explore the source code, navigate to the `source_code` folder.
 
 ## Scientific Papers
 
-This folder contains our scientific papers related to the drowsiness detection project. These papers detail the methodology, experimental results, and implications of our research. You can find the papers in the `scientific_papers` folder.
+These paper detail the methodology, experimental results, and implications of our research. You can find the papers in the `scientific_papers` folder.
 
 ## Installation
 
