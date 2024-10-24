@@ -20,7 +20,7 @@ Check out the following videos demonstrating the capabilities of the drowsiness 
   [![Model Demonstration](github_images/video_pic.png)](https://youtu.be/E-cnls_1q7U)
 
 - **Tutorial Video:** A step-by-step guide on using the HOR website and model features.
-  [![Tutorial Video](https://img.youtube.com/vi/ce0sdXH-I6E/0.jpg)](https://youtu.be/ce0sdXH-I6E)
+  [![Tutorial Video](github_images/home.png)](https://youtu.be/ce0sdXH-I6E)
 
 
 
