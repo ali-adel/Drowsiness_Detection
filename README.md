@@ -1,5 +1,7 @@
 # HOR: Drowsiness Detection Project
 
+![Drowsiness Detection](github_images/intro.jpg)
+
 Welcome to the HOR project, an initiative focused on real-time drowsiness detection using advanced machine learning techniques. This repository contains all the necessary resources for understanding, using, and contributing to the project.
 
 ## Table of Contents
@@ -17,9 +19,11 @@ Welcome to the HOR project, an initiative focused on real-time drowsiness detect
 Check out the following videos demonstrating the capabilities of the drowsiness detection model:
 
 - **Model Demonstration:** A video showcasing how the model detects drowsiness in real-time.
+- 
   [![Model Demonstration](github_images/video_pic.png)](https://youtu.be/E-cnls_1q7U)
 
 - **Tutorial Video:** A step-by-step guide on using the HOR website and model features.
+- 
   [![Tutorial Video](github_images/home.png)](https://youtu.be/ce0sdXH-I6E)
 
 
