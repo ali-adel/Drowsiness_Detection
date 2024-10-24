@@ -18,11 +18,11 @@ Welcome to the HOR project, an initiative focused on real-time drowsiness detect
 
 Check out the following videos demonstrating the capabilities of the drowsiness detection model:
 
-<iframe width="560" height="315" src="https://youtu.be/E-cnls_1q7U" frameborder="0" allowfullscreen></iframe>
 - **Model Demonstration:** A video showcasing how the model detects drowsiness in real-time.
+  [![Model Demonstration](https://img.youtube.com/vi/E-cnls_1q7U/0.jpg)](https://youtu.be/E-cnls_1q7U)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/your_tutorial_video_id" frameborder="0" allowfullscreen></iframe>
 - **Tutorial Video:** A step-by-step guide on using the HOR website and model features.
+  [![Tutorial Video](https://img.youtube.com/vi/your_tutorial_video_id/0.jpg)](https://www.youtube.com/watch?v=your_tutorial_video_id)
 
 
 
