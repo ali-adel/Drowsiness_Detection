@@ -56,7 +56,7 @@ To explore the source code, navigate to the `source_code` folder.
 
 ## Scientific Papers
 
-These paper detail the methodology, experimental results, and implications of our research. You can find the papers in the `scientific_papers` folder.
+These paper detail the methodology, experimental results, and implications of our research. You can find the papers in the `scientific_paper` folder.
 
 ## Installation
 
