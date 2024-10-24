@@ -16,10 +16,14 @@ Welcome to the HOR (Human Object Recognition) project, an initiative focused on 
 
 ## Videos
 
-This section features videos demonstrating the capabilities of the drowsiness detection model:
+Check out the following videos demonstrating the capabilities of the drowsiness detection model:
 
-- **Model Demonstration:** A video showcasing how the model detects drowsiness in real-time. Watch it [here](link).
-- **Tutorial Video:** A step-by-step guide on using the HOR website and model features. View the tutorial [here](link).
+[![Model Demonstration](link_to_thumbnail_image)](link_to_your_video)
+- **Model Demonstration:** A video showcasing how the model detects drowsiness in real-time.
+
+[![Tutorial Video](link_to_thumbnail_image)](link_to_your_tutorial_video)
+- **Tutorial Video:** A step-by-step guide on using the HOR website and model features.
+
 
 ## Project Overview
 
